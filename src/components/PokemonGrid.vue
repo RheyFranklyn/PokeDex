@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { usePokemon } from '@/composables/usePokemon'
 
-import PokemonCard from '@/components/PokemonCards.vue'
+import PokemonCardsContainer from '@/components/PokemonCardsContainer.vue'
 
 const { pokemons, loading, error, loadMore } = usePokemon()
 </script>
 
 <template>
   <section>
-    <PokemonCard v-for="pokemon in pokemons" :key="pokemon.id" :pokemon="pokemon" />
+    <PokemonCardsContainer v-for="pokemon in pokemons" :key="pokemon.id" :pokemon="pokemon" />
 
     <p v-if="loading">Loading...</p>
 

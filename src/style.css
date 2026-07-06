@@ -55,10 +55,8 @@ body {
   --font-sans: 'Nunito', sans-serif;
   --font-pixel: 'Press Start 2P', monospace;
 
-  /* FIX 1: Prefix with '--text-' so Tailwind automatically builds the `.text-game-title` utility class */
   --text-game-title: clamp(13px, 1.2vw + 10px, 25px);
 
-  /* FIX 2: Standard global CSS variable for use inside dynamic text-shadow arbitrary wrappers */
   --shadow-offset-title: clamp(2px, 0.15vw + 1.5px, 4px);
 
   /* Utilities for 3D Flip Mechanics */

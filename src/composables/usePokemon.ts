@@ -1,8 +1,9 @@
 import { onMounted, ref } from 'vue'
-
-import { getPokemon, getPokemons } from '@/services/pokemonService'
-
+import { getPokemon, getPokemons, searchPokemon } from '@/services/pokemonService'
 import type { Pokemon } from '@/types/pokemon'
+
+const loading = ref(false)
+const error = ref<string | null>(null)
 
 function loaderDelay(): Promise<void> {
   return new Promise((resolve) => {
@@ -12,8 +13,6 @@ function loaderDelay(): Promise<void> {
 
 export function usePokemon() {
   const pokemons = ref<Pokemon[]>([])
-  const loading = ref(false)
-  const error = ref<string | null>(null)
 
   const offset = ref(0)
   const limit = 20
@@ -51,3 +50,18 @@ export function usePokemon() {
     loadMore,
   }
 }
+
+
+// export async function usePokemonSearch(){
+//   const pokemon = ref<Pokemon>()
+//   const query = ref('')
+  
+//   loading.value = true
+//   try{
+//     const data = await searchPokemon(query)
+
+//     const detailedPokemons = Promise.all(data)
+//   }catch{
+
+//   }
+// }

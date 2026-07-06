@@ -39,7 +39,7 @@ function selectType(type: PokemonType | 'all') {
 <template>
   <!-- .type-scroll equivalent layout container -->
   <nav
-    class="flex gap-[0.4rem] overflow-x-auto px-6 py-[0.8rem] no-scrollbar [touch-action:pan-x]"
+    class="flex gap-[0.4rem] overflow-x-auto px-6 py-[0.8rem] no-scrollbar [touch-action:pan-x] sticky top-28 z-100 backdrop-blur-sm mb-0"
     aria-label="Filter by type"
   >
     <!-- All Reset Option -->

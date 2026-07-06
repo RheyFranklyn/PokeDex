@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PokemonCards from '@/components/PokemonCards.vue'
+import PokemonCardsContainer from '@/components/PokemonCardsContainer.vue'
 import Header from '@/components/Header.vue'
 import Navbar from './Navbar.vue'
 </script>
@@ -8,7 +8,7 @@ import Navbar from './Navbar.vue'
   <main class="relative z-1">
     <Header />
     <Navbar />
-    <PokemonCards />
+    <PokemonCardsContainer />
   </main>
 </template>
 

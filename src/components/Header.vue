@@ -4,7 +4,7 @@
   <!-- ── Header ── -->
   <!-- ── Header ── -->
   <header
-    class="flex flex-col items-center gap-2 px-6 pt-[1.2rem] pb-[0.8rem] bg-white/[0.03] border-b border-white/[0.08] sticky top-0 z-[100] backdrop-blur-sm"
+    class="flex flex-col h-28 items-center gap-2 px-6 pt-[1.2rem] pb-[0.8rem] bg-white/[0.03] border-b border-white/[0.08] sticky top-0 z-[100] backdrop-blur-sm"
   >
     <div
       class="font-pixel text-game-title tracking-[1px] text-poke-gold drop-shadow-[0_0_25px_rgba(255,215,0,0.4)] [text-shadow:var(--shadow-offset-title)_var(--shadow-offset-title)_0_#c8a200] md:text-left text-center"

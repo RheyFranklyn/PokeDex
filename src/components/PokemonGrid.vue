@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { usePokemon } from '@/composables/usePokemon'
 
 import PokemonCardsContainer from '@/components/PokemonCardsContainer.vue'
@@ -18,4 +18,4 @@ const { pokemons, loading, error, loadMore } = usePokemon()
 
     <button @click="loadMore">Load More</button>
   </section>
-</template>
+</template> -->

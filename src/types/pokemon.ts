@@ -89,3 +89,26 @@ export type PokemonType =
   | 'dark'
   | 'steel'
   | 'fairy'
+
+
+  /* slot for getpokemon by type */
+export interface TypePokemonSlot {
+  pokemon: {
+    name: string
+    url: string
+  }
+  slot: number
+}
+
+export interface ApiStatSlot {
+  base_stat: number
+  stat: {
+    name: string
+  }
+}
+
+export interface ApiTypeSlot {
+  type: {
+    name: string
+  }
+}

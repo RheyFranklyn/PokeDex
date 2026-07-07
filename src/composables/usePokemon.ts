@@ -1,9 +1,9 @@
-import { onMounted, ref } from 'vue'
-import { getPokemon, getPokemons, searchPokemon } from '@/services/pokemonService'
-import type { Pokemon } from '@/types/pokemon'
+import { onMounted, ref, watch } from 'vue' // 👈 Added watch
+import { getPokemon, fetchPokemonList, fetchPokemonByType } from '@/services/pokemonService'
+import type { Pokemon, PokemonType } from '@/types/pokemon' // 👈 Added type import if needed
+import { usePokemonFilter } from './usePokemonFilter'
 
-const loading = ref(false)
-const error = ref<string | null>(null)
+const { activeType } = usePokemonFilter()
 
 function loaderDelay(): Promise<void> {
   return new Promise((resolve) => {
@@ -11,37 +11,57 @@ function loaderDelay(): Promise<void> {
   })
 }
 
-export function usePokemon() {
-  const pokemons = ref<Pokemon[]>([])
+// 🎯 FIX 1: Move state OUTSIDE so all components read the exact same data instances
+const pokemons = ref<Pokemon[]>([])
+const loading = ref(false)
+const error = ref<string | null>(null)
+const offset = ref(0)
+const limit = 20
 
-  const offset = ref(0)
-  const limit = 20
+async function loadMore() {
+  if (loading.value) return
+  loading.value = true
 
-  async function loadMore() {
-    loading.value = true
+  try {
+    await loaderDelay()
 
-    try {
-      await loaderDelay()
-
-      const data = await getPokemons(limit, offset.value)
-
+    if (activeType.value === 'all') {
+      const data = await fetchPokemonList(limit, offset.value)
+      
       const detailedPokemons = await Promise.all(
         data.results.map((pokemon) => getPokemon(pokemon.url)),
       )
 
       pokemons.value.push(...detailedPokemons)
-
       offset.value += limit
-    } catch (err) {
-      error.value = 'Failed to load Pokémon'
-
-      console.error(err)
-    } finally {
-      loading.value = false
+    } else {
+      const typePokemons = await fetchPokemonByType(activeType.value)
+      pokemons.value = typePokemons
     }
-  }
 
-  onMounted(loadMore)
+  } catch (err) {
+    error.value = 'Failed to load Pokémon'
+    console.error(err)
+  } finally {
+    loading.value = false
+  }
+}
+
+// 🎯 FIX 2: Watch for Navbar type clicks! 
+// When user clicks 'fire', wipe the old screen array, reset offset, and hit the API.
+watch(activeType, () => {
+  pokemons.value = []
+  offset.value = 0
+  loadMore()
+})
+
+export function usePokemon() {
+  // Automatically trigger initial load when the main grid container mounts
+  onMounted(() => {
+    if (pokemons.value.length === 0) {
+      loadMore()
+    }
+  })
 
   return {
     pokemons,
@@ -50,18 +70,3 @@ export function usePokemon() {
     loadMore,
   }
 }
-
-
-// export async function usePokemonSearch(){
-//   const pokemon = ref<Pokemon>()
-//   const query = ref('')
-  
-//   loading.value = true
-//   try{
-//     const data = await searchPokemon(query)
-
-//     const detailedPokemons = Promise.all(data)
-//   }catch{
-
-//   }
-// }

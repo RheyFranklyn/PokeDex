@@ -3,7 +3,9 @@ import type { Pokemon } from '@/types/pokemon'
 
 const props = defineProps<{
   pokemon: Pokemon
+  isSearch?: boolean 
 }>()
+
 
 function padId(id: number): string {
   return id.toString().padStart(3, '0')
@@ -11,23 +13,24 @@ function padId(id: number): string {
 </script>
 
 <template>
-  <article class="card-wrap">
+  <article class="card-wrap" :class="{'isCardSearch':isSearch}">
     <div class="card-inner-3d">
       <!-- Front -->
       <div class="card-face card-front">
         <div class="card-body">
           <div class="shine"></div>
 
-          <span class="card-num"> #{{ padId(props.pokemon.id) }} </span>
+          <span class="card-num"> #{{ padId(pokemon.id) }} </span>
 
           <button class="flip-btn" aria-label="Flip Card">↺</button>
+          <button class="fav-btn">★</button>
 
           <div class="sprite-wrap">
             <div class="sprite-bg"></div>
             <div class="sprite-shadow"></div>
 
             <div class="sprite-float">
-              <img class="sprite" :src="props.pokemon.sprite" :alt="props.pokemon.name" />
+              <img class="sprite" :class="{'is-searched-sprite': props.isSearch}" :src="props.pokemon.sprite" :alt="props.pokemon.name" />
             </div>
           </div>
 
@@ -100,7 +103,7 @@ function padId(id: number): string {
             </div>
           </div>
 
-          <button class="fav-btn">★</button>
+          <!-- <button class="fav-btn">★</button> -->
         </div>
       </div>
 
@@ -156,7 +159,9 @@ function padId(id: number): string {
   perspective: 900px;
   cursor: pointer;
 }
-
+.card-wrap.isCardSearch{
+  height: 500px;
+}
 .card-inner-3d {
   position: relative;
   width: 100%;
@@ -309,6 +314,11 @@ function padId(id: number): string {
     filter 0.3s ease;
 }
 
+.sprite.is-searched-sprite {
+  
+  transform: scale(2);
+}
+
 .card-wrap:hover .sprite {
   transform: scale(1.08);
 
@@ -407,7 +417,7 @@ function padId(id: number): string {
 /* ── Favourite Button ─────────────────────────────────────────────────── */
 .fav-btn {
   position: absolute;
-  bottom: 7px;
+  top: 30px;
   right: 7px;
   background: none;
   border: none;
@@ -477,5 +487,109 @@ function padId(id: number): string {
 
 .back-types {
   margin-top: 6px;
+}
+
+/* ====== style for searched pokemon =======*/
+
+
+.card-wrap.isCardSearch {
+  height: 480px; 
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+
+.isCardSearch .card-body {
+  gap: 1.2rem;
+  padding: 2.2rem 1.5rem 1.5rem;
+}
+
+
+.isCardSearch .sprite-wrap {
+  width: 130px;
+  height: 130px;
+  margin-top: 16px;
+}
+.isCardSearch .sprite-bg {
+  width: 150px;
+  height: 150px;
+  filter: blur(28px);
+}
+.isCardSearch .sprite-shadow {
+  width: 85px;
+  height: 12px;
+  bottom: -10px;
+}
+
+
+.sprite.is-searched-sprite {
+  width: 100px !important;
+  height: 100px !important;
+}
+
+/* ypography sizing enhancements */
+.isCardSearch .poke-name {
+  font-size: 18px;
+  letter-spacing: 0.8px;
+}
+.isCardSearch .card-num {
+  font-size: 9px;
+  top: 12px;
+  left: 14px;
+}
+.isCardSearch .type-badge {
+  padding: 4px 12px;
+  font-size: 10px;
+}
+
+.isCardSearch .stat-bar-row {
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 15px;
+}
+.isCardSearch .stat-line {
+  gap: 8px;
+}
+.isCardSearch .stat-label {
+  width: 28px;
+  font-size: 10px;
+}
+.isCardSearch .stat-track {
+  height: 6px;
+  border-radius: 4px;
+}
+.isCardSearch .stat-val {
+  width: 26px;
+  font-size: 10px;
+}
+
+.isCardSearch .flip-btn,
+.isCardSearch .back-flip-btn {
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  font-size: 13px;
+}
+.isCardSearch .fav-btn {
+  top: 45px;
+  right: 15px;
+  font-size: 18px;
+}
+
+/* 8. Card back configuration layout adjustments */
+.isCardSearch .card-back-body {
+  padding: 2rem;
+  gap: 1rem;
+}
+.isCardSearch .back-sprite-big {
+  width: 180px;
+  height: 180px;
+}
+.isCardSearch .back-name {
+  font-size: 13px;
+}
+.isCardSearch .back-num {
+  font-size: 9px;
 }
 </style>

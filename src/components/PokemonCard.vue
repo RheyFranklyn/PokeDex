@@ -1,28 +1,99 @@
 <script setup lang="ts">
-import type { Pokemon } from '@/types/pokemon'
+import { ref, watch} from 'vue'
+import type { Pokemon, PokemonType } from '@/types/pokemon'
 
 const props = defineProps<{
   pokemon: Pokemon
   isSearch?: boolean 
 }>()
 
+const isFlipped = ref(false)
+
+//cature the sprite for my fallback
+const spriteUrl = ref(`https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/versions/generation-v/black-white/animated/${props.pokemon.id}.gif`)
+
+const isImageLoading = ref(true)
+
+
+function toggleFlip(): void {
+  isFlipped.value = !isFlipped.value
+}
 
 function padId(id: number): string {
   return id.toString().padStart(3, '0')
 }
+
+// change the color of type btn based on the type
+const pokemonType: Record<PokemonType, string>={
+  normal: '#a8a77a', fire: '#ee8130', water: '#6390f0', electric: '#f7d02c',
+  grass: '#7ac74c', ice: '#96d9d6', fighting: '#c22e28', poison: '#a33ea1',
+  ground: '#e2bf65', flying: '#a98ff3', psychic: '#f95587', bug: '#a6b91a',
+  rock: '#b6a136', ghost: '#735797', dragon: '#6f35fc', dark: '#705746',
+  steel: '#b7b7ce', fairy: '#d685ad',
+}
+
+function getTypeColor(types: string): string{
+  return pokemonType[types.toLowerCase() as PokemonType] || '#a8a77a'
+}
+
+// for dynamic img-bg
+function getBackgroundAsset(type: string): string {
+
+  const activeType = type ? type.toLowerCase() : 'normal'
+
+  return new URL(`../assets/images/${activeType}.jpg`, import.meta.url).href
+}
+
+//img load
+function handleImageLoad() {
+  isImageLoading.value = false
+}
+
+// image error
+function sanitizeShowdownName(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/\s+/g, '-')       // Replace spaces with hyphens
+    .replace(/[^a-z0-9_-]/g, '') // Remove punctuation like periods or apostrophes
+}
+
+function handleImageError() {
+  const cleanedName = sanitizeShowdownName(props.pokemon.name)
+  
+  const defaultCdnGif = `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/versions/generation-v/black-white/animated/${props.pokemon.id}.gif`
+  const showdownFallbackGif = `https://play.pokemonshowdown.com/sprites/ani/${cleanedName}.gif`
+  const officialArtworkSource = `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/other/official-artwork/${props.pokemon.id}.png`
+  
+  isImageLoading.value = true
+
+  // Default failed 
+  if (spriteUrl.value === defaultCdnGif) {
+    spriteUrl.value = showdownFallbackGif
+  } 
+  // Showdown failed 
+  else if (spriteUrl.value === showdownFallbackGif) {
+    spriteUrl.value = officialArtworkSource
+  }
+}
+
+// Reset everything gracefully if the card shifts to a completely different Pokémon profile
+watch(() => props.pokemon.id, (newId) => {
+  isImageLoading.value = true
+  spriteUrl.value = `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/versions/generation-v/black-white/animated/${newId}.gif`
+})
+
 </script>
 
 <template>
-  <article class="card-wrap" :class="{'isCardSearch':isSearch}">
+  <article class="card-wrap" :class="{'isCardSearch': isSearch, 'flipped': isFlipped}">
     <div class="card-inner-3d">
-      <!-- Front -->
       <div class="card-face card-front">
         <div class="card-body">
           <div class="shine"></div>
 
           <span class="card-num"> #{{ padId(pokemon.id) }} </span>
 
-          <button class="flip-btn" aria-label="Flip Card">↺</button>
+          <button @click.stop="toggleFlip" class="flip-btn" aria-label="Flip Card">↺</button>
           <button class="fav-btn">★</button>
 
           <div class="sprite-wrap">
@@ -30,7 +101,10 @@ function padId(id: number): string {
             <div class="sprite-shadow"></div>
 
             <div class="sprite-float">
-              <img class="sprite" :class="{'is-searched-sprite': props.isSearch}" :src="props.pokemon.sprite" :alt="props.pokemon.name" />
+
+              <div v-if="isImageLoading" class="sprite-skeleton"></div>
+
+              <img class="sprite" :class="{'is-searched-sprite': props.isSearch, 'is-loading-hidden': isImageLoading}" :src="spriteUrl" :alt="props.pokemon.name" @error="handleImageError" @load="handleImageLoad"/>
             </div>
           </div>
 
@@ -39,13 +113,12 @@ function padId(id: number): string {
           </h2>
 
           <div class="type-badges">
-            <span v-for="type in props.pokemon.types" :key="type" class="type-badge">
+            <span v-for="type in props.pokemon.types" :key="type" class="type-badge" >
               {{ type }}
             </span>
           </div>
 
           <div class="stat-bar-row">
-            <!-- HP -->
             <div class="stat-line">
               <span class="stat-label"> HP </span>
 
@@ -64,7 +137,6 @@ function padId(id: number): string {
               </span>
             </div>
 
-            <!-- ATK -->
             <div class="stat-line">
               <span class="stat-label"> ATK </span>
 
@@ -83,7 +155,6 @@ function padId(id: number): string {
               </span>
             </div>
 
-            <!-- DEF -->
             <div class="stat-line">
               <span class="stat-label"> DEF </span>
 
@@ -102,16 +173,18 @@ function padId(id: number): string {
               </span>
             </div>
           </div>
-
-          <!-- <button class="fav-btn">★</button> -->
         </div>
       </div>
 
-      <!-- Back -->
-
+      <!-- back -->
       <div class="card-face card-back">
-        <div class="card-back-body">
-          <img class="back-sprite-big" :src="props.pokemon.sprite" :alt="props.pokemon.name" />
+        <div class="card-back-body" >
+
+          <img v-if="!isSearch" :src="getBackgroundAsset(props.pokemon.types[0]??'normal')" alt="" class="pokeBacground">
+          
+          <div v-if="isImageLoading" class="sprite-skeleton"></div>
+
+          <img class="back-sprite-big" :src="spriteUrl" :alt="props.pokemon.name" @error="handleImageError" @load="handleImageLoad" :class="{'is-loading-hidden': isImageLoading}"/>
 
           <div class="back-name">
             {{ props.pokemon.name }}
@@ -120,12 +193,17 @@ function padId(id: number): string {
           <div class="back-num">#{{ padId(props.pokemon.id) }}</div>
 
           <div class="back-types">
-            <span v-for="type in props.pokemon.types" :key="type" class="type-badge">
+            <span 
+              v-for="type in props.pokemon.types" 
+              :key="type" 
+              class="type-badge" 
+              :style="{ backgroundColor: getTypeColor(type) }"
+            >
               {{ type }}
             </span>
           </div>
 
-          <button class="back-flip-btn">↺</button>
+          <button @click.stop="toggleFlip" class="back-flip-btn">↺</button>
         </div>
       </div>
     </div>
@@ -157,7 +235,6 @@ function padId(id: number): string {
 .card-wrap {
   height: 220px;
   perspective: 900px;
-  cursor: pointer;
 }
 .card-wrap.isCardSearch{
   height: 500px;
@@ -269,16 +346,11 @@ function padId(id: number): string {
 
 .sprite-bg {
   position: absolute;
-
   width: 90px;
   height: 90px;
-
   border-radius: 50%;
-
   background: radial-gradient(circle, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.04));
-
   filter: blur(20px);
-
   z-index: 0;
 }
 
@@ -296,9 +368,7 @@ function padId(id: number): string {
 
 .sprite-float {
   position: relative;
-
   z-index: 2;
-
   animation: float 3s ease-in-out infinite;
 }
 
@@ -315,27 +385,18 @@ function padId(id: number): string {
 }
 
 .sprite.is-searched-sprite {
-  
-  transform: scale(2);
+  width: 100px !important;
+  height: 100px !important;
 }
 
 .card-wrap:hover .sprite {
   transform: scale(1.08);
-
   filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.4));
 }
 @keyframes float {
-  0% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-8px);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
 }
 
 /* ── Pokémon Name ─────────────────────────────────────────────────────── */
@@ -452,13 +513,6 @@ function padId(id: number): string {
   overflow: hidden;
 }
 
-/* Ambient colour orbs on back */
-.back-orb {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.15;
-}
-
 .back-sprite-big {
   position: relative;
   z-index: 1;
@@ -475,7 +529,10 @@ function padId(id: number): string {
   color: #ffffff;
   text-align: center;
   margin-top: 6px;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  /* text-shadow: 0 0 10px rgba(255, 255, 255, 0.4); */
+  text-shadow: 
+    0 0 4px rgba(0, 0, 0, 0.8),  
+    0 0 2px rgba(0, 0, 0, 1); 
 }
 
 .back-num {
@@ -483,6 +540,9 @@ function padId(id: number): string {
   font-size: 7px;
   color: rgba(255, 255, 255, 0.5);
   margin-top: 3px;
+  text-shadow: 
+    0 0 4px rgba(0, 0, 0, 0.8),  /* Soft dark glow */
+    0 0 2px rgba(0, 0, 0, 1); 
 }
 
 .back-types {
@@ -490,20 +550,16 @@ function padId(id: number): string {
 }
 
 /* ====== style for searched pokemon =======*/
-
-
 .card-wrap.isCardSearch {
   height: 480px; 
   max-width: 300px;
   margin: 0 auto;
 }
 
-
 .isCardSearch .card-body {
   gap: 1.2rem;
   padding: 2.2rem 1.5rem 1.5rem;
 }
-
 
 .isCardSearch .sprite-wrap {
   width: 130px;
@@ -521,13 +577,7 @@ function padId(id: number): string {
   bottom: -10px;
 }
 
-
-.sprite.is-searched-sprite {
-  width: 100px !important;
-  height: 100px !important;
-}
-
-/* ypography sizing enhancements */
+/* Typography sizing enhancements */
 .isCardSearch .poke-name {
   font-size: 18px;
   letter-spacing: 0.8px;
@@ -577,7 +627,7 @@ function padId(id: number): string {
   font-size: 18px;
 }
 
-/* 8. Card back configuration layout adjustments */
+/* Card back configuration layout adjustments */
 .isCardSearch .card-back-body {
   padding: 2rem;
   gap: 1rem;
@@ -591,5 +641,36 @@ function padId(id: number): string {
 }
 .isCardSearch .back-num {
   font-size: 9px;
+}
+
+/* background */
+.pokeBacground{
+  position: absolute;
+  z-index: -1;
+  object-fit: fill; 
+  height: 250px;
+  filter: brightness(0.9);
+}
+
+/* skelton loading effect chuchu */
+.sprite-skeleton {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.06) 75%);
+  background-size: 200% 100%;
+  animation: shimmerEffect 1.4s infinite linear;
+}
+.sprite-skeleton.spec-back {
+  background: linear-gradient(90deg, rgba(0,0,0,0.2) 25%, rgba(255,255,255,0.1) 50%, rgba(0,0,0,0.2) 75%);
+  background-size: 200% 100%;
+}
+.is-loading-hidden {
+  position: absolute;
+  opacity: 0; /* Keeps asset sizing intact while hidden during live download steps */
+}
+@keyframes shimmerEffect {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 </style>

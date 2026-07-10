@@ -3,7 +3,7 @@
 <template>
   <div class="loader">
     <img
-      src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/92.png"
+      src="https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/other/official-artwork/92.png"
       alt="Gastly"
       class="gastly"
     />

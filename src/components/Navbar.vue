@@ -16,8 +16,10 @@ function getTypeColor(type: PokemonType): string {
 
 const pokemonTypes = Object.keys(typeMap) as PokemonType[]
 
-// 🎯 Hook up the shared filter pipeline variables
+
 const { activeType, selectType } = usePokemonFilter()
+
+
 </script>
 
 <template>

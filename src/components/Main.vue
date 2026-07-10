@@ -13,3 +13,4 @@ import Navbar from './Navbar.vue'
 </template>
 
 <style scoped></style>
+ 

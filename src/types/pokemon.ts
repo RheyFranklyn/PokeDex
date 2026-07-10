@@ -112,3 +112,11 @@ export interface ApiTypeSlot {
     name: string
   }
 }
+
+export interface TypePokemonResource {
+  pokemon: {
+    name: string
+    url: string
+  }
+  slot: number
+}

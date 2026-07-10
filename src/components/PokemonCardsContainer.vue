@@ -117,7 +117,7 @@ const filteredPokemons = computed(() => {
       </button>
     </div>
 
-    <div v-if="!isSearching" class="flex flex-col items-center mt-6">
+    <div v-if="!isSearching" class="flex flex-col items-start mt-3 mb-3">
       <PokemonLoader v-if="loading" />
       <p v-if="error" class="text-red-400 text-sm mb-2">{{ error }}</p>
       <button @click="loadMore" :disabled="loading" class="bg-white/10 px-6 py-2 rounded-xl text-sm">

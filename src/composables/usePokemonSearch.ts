@@ -4,8 +4,8 @@ import type { Pokemon } from '@/types/pokemon'
 
 const searchQuery = ref('')
 const searchedPokemon = ref<Pokemon | null>(null)
-const evolutionFamily = ref<Pokemon[]>([]) // 🎯 Stores the full family array
-const activeCarouselIndex = ref(0)         // 🎯 Tracks which one is centered
+const evolutionFamily = ref<Pokemon[]>([]) // Stores the full family array
+const activeCarouselIndex = ref(0)         // Tracks which one is centered
 const searchLoading = ref(false)
 const searchError = ref<string | null>(null)
 const isSearching = ref(false)

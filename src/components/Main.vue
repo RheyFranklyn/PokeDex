@@ -2,6 +2,7 @@
 import PokemonCardsContainer from '@/components/PokemonCardsContainer.vue'
 import Header from '@/components/Header.vue'
 import Navbar from './Navbar.vue'
+import BattleBtn from './common/BattleBtn.vue';
 </script>
 
 <template>
@@ -9,8 +10,10 @@ import Navbar from './Navbar.vue'
     <Header />
     <Navbar />
     <PokemonCardsContainer />
+    <BattleBtn/>
   </main>
 </template>
 
-<style scoped></style>
- 
+<style scoped>
+
+</style>

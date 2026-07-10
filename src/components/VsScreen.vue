@@ -25,22 +25,27 @@ onMounted(() => {
 
     <div class="panel right" :class="{ in: rightIn }">
       <span class="label">Enemy</span>
-      <span class="icon">🛡️</span>
+      <!-- 🎯 Added an avatar class to prevent size blowouts -->
+      <img src="@/assets/images/hero.jpg" alt="Enemy Avatar" class="enemy-avatar">
     </div>
   </div>
 </template>
 
 <style scoped>
 .vs-screen {
-  position: relative;
-  min-height: 520px;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
   background: #0a0a0a;
   overflow: hidden;
   display: flex;
 }
 .panel {
   position: absolute;
-  top: 0; bottom: 0;
+  top: 0; 
+  bottom: 0;
   width: 50%;
   display: flex;
   flex-direction: column;
@@ -50,13 +55,27 @@ onMounted(() => {
   transition: transform 0.55s cubic-bezier(.22, 1, .36, 1);
 }
 .panel .label {
-  font-size: 22px;
+  font-size: clamp(18px, 4vw, 32px);
   font-weight: 900;
   letter-spacing: 4px;
   text-transform: uppercase;
   color: #fff;
+  font-family: var(--font-pixel, sans-serif);
 }
-.panel .icon { font-size: 52px; }
+.panel .icon { 
+  font-size: clamp(36px, 6vw, 64px); 
+}
+
+/* 🎯 Enemy image sizing constraints */
+.panel .enemy-avatar {
+  /* Dynamic constraints: sets a size range that stays bounded nicely on phone or widescreen panels */
+  width: clamp(100px, 15vw, 160px);
+  height: clamp(100px, 15vw, 160px);
+  object-fit: cover; /* Keeps image proportions perfect without stretching distortion */
+  border-radius: 12px; /* Smooth rounded gaming profile look */
+  border: 4px solid #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
 
 .left {
   left: 0;
@@ -76,11 +95,13 @@ onMounted(() => {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%) scale(0);
-  background: #ffe066;
-  color: #111;
-  font-size: 38px;
+  background: var(--color-poke-gold, #ffe066);
+  color: var(--color-poke-dark, #111);
+  font-size: clamp(24px, 3vw, 38px);
   font-weight: 900;
-  width: 88px; height: 88px;
+  font-family: var(--font-pixel, sans-serif);
+  width: clamp(70px, 10vw, 96px); 
+  height: clamp(70px, 10vw, 96px);
   border-radius: 50%;
   display: flex;
   align-items: center;

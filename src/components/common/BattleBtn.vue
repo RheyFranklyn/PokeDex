@@ -1,37 +1,39 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-
+// Inside common/BattleBtn.vue
+const emit = defineEmits<{ trigger: [] }>() // 🎯 Define the trigger emit
 const spinning = ref(false)
 
 function onBattle(): void {
-  if (spinning.value) return // Prevent clicking multiple times during animation
+  if (spinning.value) return 
   spinning.value = true
+  
   setTimeout(() => {
     spinning.value = false
-    // emit('battle')
+    emit('trigger') // 🎯 Tells the main file to show the VS screen right now!
   }, 500)
 }
 </script>
 
 <template>
-  <div class="fixed bottom-2 left-1/2 -translate-x-1/2 z-50 bg-transparent">
+  <div class="fixed bottom-4 right-4 sm:bottom-2 sm:right-6 z-50 bg-transparent">
     
     <button
-      class="poke-ball-container group relative flex w-14 h-14 items-center justify-center cursor-pointer select-none border-none bg-transparent"
+      class="poke-ball-container group relative flex w-14 h-14 items-center justify-center cursor-pointer select-none border-none bg-transparent outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded-full"
       aria-label="Start battle"
       @click="onBattle"
     >
       <span 
-        class="absolute w-12 h-12 rounded-full opacity-60 blur-md scale-110 transition-all duration-300 group-hover:animate-ping group-hover:scale-125"
+        class="absolute w-12 h-12 rounded-full opacity-0 blur-md scale-100 transition-all duration-300 group-hover:opacity-60 group-hover:animate-ping group-hover:scale-125 group-focus:opacity-60 group-focus:scale-125"
         style="background-color: var(--color-poke-gold);"
       ></span>
 
       <span 
-        class="absolute w-11 h-11 rounded-full opacity-30 blur-sm scale-100 group-hover:scale-115 transition-transform duration-300 bg-red-600"
+        class="absolute w-11 h-11 rounded-full opacity-0 blur-sm scale-90 bg-red-600 transition-all duration-300 group-hover:opacity-30 group-hover:scale-115 group-focus:opacity-30 group-focus:scale-115 group-active:scale-95"
       ></span>
 
       <div
-        class="poke-ball relative z-10 transition-transform duration-200 group-hover:scale-110 active:scale-95"
+        class="poke-ball relative z-10 transition-transform duration-200 group-hover:scale-110 group-focus:scale-110 active:scale-95"
         :class="{ spin: spinning }"
       />
       
@@ -42,7 +44,6 @@ function onBattle(): void {
 
 <style scoped>
 .poke-ball {
-  /* 🎯 Switched width back to explicit pixels so it renders flawlessly */
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -50,11 +51,17 @@ function onBattle(): void {
   border: 4px solid #111;
   position: relative;
   cursor: pointer;
-  box-shadow: 0 0 32px rgba(255, 60, 60, 0.4);
-  /* Removed conflicting margin-bottom and hover rules */
+  /* 🎯 REMOVED ALL PASSIVE GLOW: Standard, crisp card shadow only */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Central button element of the Poke Ball design */
+/* 🎯 THE GLOWS ONLY AWAKEN HERE (On Interaction) */
+.poke-ball-container:hover .poke-ball,
+.poke-ball-container:focus .poke-ball {
+  box-shadow: 0 0 24px rgba(255, 60, 60, 0.6);
+}
+
 .poke-ball::after {
   content: '';
   position: absolute;
@@ -67,7 +74,6 @@ function onBattle(): void {
   box-shadow: 0 0 0 3px #fff;
 }
 
-/* Active Spin animation class configuration */
 .poke-ball.spin { 
   animation: ballSpin 0.5s ease-in-out; 
 }

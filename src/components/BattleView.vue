@@ -22,17 +22,16 @@ const {
   enemyHPPercent,
   playerHPColor,
   enemyHPColor,
-  initBattle,
-  resetToHome,
   selectPlayer,
   selectEnemy,
-  startVS
+  startVS,
+  initBattle,
+  resetToHome
 } = useBattle()
 </script>
 
 <template>
-  <div class="w-full min-h-screen bg-[#0a0a12] flex flex-col items-center justify-center overflow-x-hidden">
-    
+  <div class="battle-view-container">
     <PickScreen
       v-if="screen === 'home'"
       :player-pick="playerPick"
@@ -43,9 +42,9 @@ const {
       @fight="startVS"
     />
 
-    <VsScreen 
-      v-else-if="screen === 'vs'" 
-      @done="initBattle" 
+    <VsScreen
+      v-else-if="screen === 'vs'"
+      @done="initBattle"
     />
 
     <FightScreen
@@ -72,10 +71,14 @@ const {
       :enemy-pick="enemyPick"
       @play-again="resetToHome"
     />
-
   </div>
 </template>
 
 <style scoped>
-/* Scoped layout animations if needed */
+.battle-view-container {
+  background: #0a0a12;
+  min-height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+}
 </style>

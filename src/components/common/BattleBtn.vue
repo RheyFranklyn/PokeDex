@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-// Inside common/BattleBtn.vue
-const emit = defineEmits<{ trigger: [] }>() // 🎯 Define the trigger emit
+
+const emit = defineEmits<{ trigger: [] }>() 
 const spinning = ref(false)
 
 function onBattle(): void {
@@ -10,7 +10,7 @@ function onBattle(): void {
   
   setTimeout(() => {
     spinning.value = false
-    emit('trigger') // 🎯 Tells the main file to show the VS screen right now!
+    emit('trigger') 
   }, 500)
 }
 </script>

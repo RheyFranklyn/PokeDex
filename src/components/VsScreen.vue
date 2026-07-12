@@ -18,14 +18,13 @@ onMounted(() => {
   <div class="vs-screen" role="presentation" aria-label="Versus transition">
     <div class="panel left" :class="{ in: leftIn }">
       <span class="label">You</span>
-      <span class="icon">⚔️</span>
+      <img src="@/assets/images/myAvatar.png" alt="Enemy Avatar" class="enemy-avatar">
     </div>
 
     <div class="vs-badge" :class="{ in: badgeIn }" aria-hidden="true">VS</div>
 
     <div class="panel right" :class="{ in: rightIn }">
       <span class="label">Enemy</span>
-      <!-- 🎯 Added an avatar class to prevent size blowouts -->
       <img src="@/assets/images/hero.jpg" alt="Enemy Avatar" class="enemy-avatar">
     </div>
   </div>
@@ -66,15 +65,19 @@ onMounted(() => {
   font-size: clamp(36px, 6vw, 64px); 
 }
 
-/* 🎯 Enemy image sizing constraints */
+
 .panel .enemy-avatar {
-  /* Dynamic constraints: sets a size range that stays bounded nicely on phone or widescreen panels */
-  width: clamp(100px, 15vw, 160px);
-  height: clamp(100px, 15vw, 160px);
-  object-fit: cover; /* Keeps image proportions perfect without stretching distortion */
-  border-radius: 12px; /* Smooth rounded gaming profile look */
-  border: 4px solid #fff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  width: 85%;
+
+  max-width: 340px;
+  
+  max-height: 70vh; 
+  
+  object-fit: contain; 
+  
+ 
+  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.65));
 }
 
 .left {

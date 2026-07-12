@@ -11,7 +11,6 @@ function loaderDelay(): Promise<void> {
   })
 }
 
-// Global Core State aligned across  components
 const pokemons = ref<Pokemon[]>([])
 const loading = ref(false)
 const error = ref<string | null>(null)
@@ -69,7 +68,7 @@ async function loadMore() {
   }
 }
 
-// Watch for category clicks, wipe everything, reset pointers, and load page 1
+// Watch for category clicks, wipe everything, reset pointers, and load page 1 and chuchu
 watch(activeType, async (newType: PokemonType | 'all') => {
   pokemons.value = []
   allTypePokemonUrls.value = []

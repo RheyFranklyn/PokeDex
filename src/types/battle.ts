@@ -26,6 +26,7 @@ export interface BattleResult {
 export type Screen = 'home' | 'vs' | 'fight' | 'result'
 
 
+//try lng sa
 export const POKEMON: Pokemon[] = [
   { id: 25, name: 'pikachu', hp: 110, atk: 60, type: 'electric', gif: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif' },
   { id: 4, name: 'charmander', hp: 100, atk: 58, type: 'fire', gif: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif' },

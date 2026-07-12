@@ -77,5 +77,5 @@ const {
 </template>
 
 <style scoped>
-/* Scoped layout animations if needed */
+
 </style>

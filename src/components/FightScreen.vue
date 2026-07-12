@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue' 
 import type { Pokemon, BattleState } from '@/types/battle'
+import hitSoundAsset from '@/assets/hit.mp3' 
 
 const props = defineProps<{
   playerPick: Pokemon
@@ -17,6 +18,23 @@ const props = defineProps<{
   faintingEnemy:   boolean
   hitMessage: { text: string; target: 'player' | 'enemy'; key: number } | null
 }>()
+
+
+const hitAudio = new Audio(hitSoundAsset)
+
+watch(
+  () => props.hitMessage,
+  (newMessage) => {
+    
+    if (newMessage) {
+      hitAudio.currentTime = 0
+      hitAudio.play().catch((error) => {
+        console.warn("Audio playback context was delayed:", error)
+      })
+    }
+  },
+  { deep: true }
+)
 
 function fallback(id: number): string {
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`

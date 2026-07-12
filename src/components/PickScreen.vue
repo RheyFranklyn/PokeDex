@@ -7,7 +7,7 @@ import type { Pokemon as BattlePokemon } from '@/types/battle'
 import { TYPE_COLORS } from '@/types/pokemon.ts'
 import { usePokemon } from '@/composables/usePokemon'       
 import { usePokemonSearch } from '@/composables/usePokemonSearch'
-import PokeCardBattle from './PokeCardBattle.vue'
+import BattleBtn from '@/components/BattleBtn.vue'
 import pickSound from '@/assets/ichooseyou.mp3'
 
 const pickingSound = new Audio(pickSound)
@@ -118,7 +118,7 @@ function fallbackSprite(id: number): string {
         
         <div class="grid-container">
           <div class="poke-grid">
-            <PokeCardBattle
+            <BattleBtn
               v-for="p in activeSelectionPool"
               :key="'p-' + p.id"
               :pokemon="p"
@@ -162,7 +162,7 @@ function fallbackSprite(id: number): string {
 
         <div class="grid-container">
           <div class="poke-grid">
-            <PokeCardBattle
+            <BattleBtn
               v-for="p in activeSelectionPool"
               :key="'e-' + p.id"
               :pokemon="p"

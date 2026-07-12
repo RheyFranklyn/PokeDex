@@ -12,12 +12,12 @@ const props = defineProps<{
 
 const emit = defineEmits<{ playAgain: [] }>()
 
-// 2. Instantiate the audio object
+
 const winnerAudio = new Audio(winSound)
 const loseAudio = new Audio(loseSound)
 
 onMounted(() => {
-  // 3. Only play if the player actually won the battle
+  // Only play if the player actually won the battle
   if (props.result.playerWon) {
     winnerAudio.currentTime = 0
     winnerAudio.play().catch(error => {
@@ -31,7 +31,7 @@ onMounted(() => {
   }
 })
 
-// 4. Clean up: Stop the music instantly if they click "Play Again" or leave the screen
+// Clean up: Stop the music instantly if they click "Play Again" or leave the screen
 onBeforeUnmount(() => {
   winnerAudio.pause()
   winnerAudio.currentTime = 0

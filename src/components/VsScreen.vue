@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-
+import clickSound from '@/assets/enteringBattleSound.mp3'
 const emit = defineEmits<{ done: [] }>()
 
+const sound = new Audio(clickSound)
 const leftIn  = ref(false)
 const rightIn = ref(false)
 const badgeIn = ref(false)
 
 onMounted(() => {
+  sound.currentTime = 0
+  sound.play()
   setTimeout(() => { leftIn.value  = true; rightIn.value = true }, 120)
   setTimeout(() => { badgeIn.value = true }, 620)
-  setTimeout(() => emit('done'), 2300)
+  setTimeout(() => emit('done'), 3000)
 })
 </script>
 

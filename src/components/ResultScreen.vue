@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { onMounted, onBeforeUnmount } from 'vue' // 1. Import lifecycle hooks
 import type { Pokemon, BattleResult } from '@/types/battle'
+import winSound from '@/assets/win.mp3'
+import loseSound from '@/assets/lose.mp3'
 
 const props = defineProps<{
   result: BattleResult
@@ -8,6 +11,31 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{ playAgain: [] }>()
+
+// 2. Instantiate the audio object
+const winnerAudio = new Audio(winSound)
+const loseAudio = new Audio(loseSound)
+
+onMounted(() => {
+  // 3. Only play if the player actually won the battle
+  if (props.result.playerWon) {
+    winnerAudio.currentTime = 0
+    winnerAudio.play().catch(error => {
+      console.warn("Audio autoplay blocked by browser:", error)
+    })
+  }else{
+    loseAudio.currentTime = 0
+    loseAudio.play().catch(error => {
+      console.warn("Audio autoplay blocked by browser:", error)
+    })
+  }
+})
+
+// 4. Clean up: Stop the music instantly if they click "Play Again" or leave the screen
+onBeforeUnmount(() => {
+  winnerAudio.pause()
+  winnerAudio.currentTime = 0
+})
 
 function fallback(id: number): string {
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
@@ -66,6 +94,7 @@ function fallback(id: number): string {
 </template>
 
 <style scoped>
+/* Your existing CSS code remains exactly unchanged */
 .result-screen {
   width: 100vw;
   min-height: 100vh;

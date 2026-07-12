@@ -5,21 +5,28 @@ import PokemonCardsContainer from '@/components/PokemonCardsContainer.vue'
 import Header from '@/components/Header.vue'
 import Navbar from './Navbar.vue'
 import BattleBtn from './common/BattleBtn.vue'
+import clickSound from '@/assets/pokeyman.mp3'
 
 const router = useRouter()
+const enteringBattleSound = new Audio(clickSound)
 
-// --- 🎬 Interactive Screen State ---
+// --- Interactive Screen State ---
 const isEncounterTransition = ref(false)
 
 function goToBattleArena() {
-  // 1. Kick off the screen-blanking flash animation sequence immediately
-  isEncounterTransition.value = true
+  enteringBattleSound.currentTime = 0
+  enteringBattleSound.play()
   
-  // 2. Hold back navigation until the 400ms visual sequence ends
   setTimeout(() => {
+      isEncounterTransition.value = true
+  }, 500);
+
+  setTimeout(() => {
+    
     isEncounterTransition.value = false
+    
     router.push('/battle')
-  }, 1000)
+  }, 5000)
 }
 </script>
 
@@ -31,7 +38,17 @@ function goToBattleArena() {
     <Navbar />
     <PokemonCardsContainer />
     
-    <BattleBtn @trigger="goToBattleArena" />
+    <BattleBtn @trigger="goToBattleArena" class="animate-pulse-slow"/>
+<img 
+  src="@/assets/images/fireBtn.png"  
+  alt="fight-button" 
+  class="w-32 h-16 fixed bottom-5 right-20 cursor-pointer sm:bottom-4 z-50 
+         drop-shadow-[0_0_8px_rgba(249,115,22,0.6)]
+         hover:drop-shadow-[0_0_15px_rgba(239,68,68,0.9)]
+         transition-all duration-300 ease-out
+         hover:-translate-y-1 hover:scale-105 active:scale-95 animate-pulse-slow" 
+  @click="goToBattleArena"
+/>
   </main>
 </template>
 
@@ -50,16 +67,28 @@ function goToBattleArena() {
 }
 
 @keyframes retroFlicker {
-  0%   { opacity: 0; }
-  10%  { opacity: 1; }
-  20%  { opacity: 0; }
-  30%  { opacity: 1; }
-  40%  { opacity: 0; }
-  50%  { opacity: 1; }
-  60%  { opacity: 0; }
-  70%  { opacity: 1; }
-  80%  { opacity: 0; }
-  90%  { opacity: 1; }
-  100% { opacity: 1; } /* Stay pure pitch black right as router swaps components */
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  30% { opacity: 0; }
+  45% { opacity: 1; }
+  60% { opacity: 0; }
+  75% { opacity: 1; }
+  100% { opacity: 1; } /* Stay pure pitch black at 100% right as router swaps components */
+}
+
+/* fight button */
+.animate-pulse-slow {
+  animation: flamePulse 2.5s infinite ease-in-out;
+}
+
+@keyframes flamePulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.6));
+  }
+  50% {
+    transform: scale(1.03);
+    filter: drop-shadow(0 0 16px rgba(239, 68, 68, 0.8));
+  }
 }
 </style>

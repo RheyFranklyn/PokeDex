@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-// Explicitly import both types to prevent local naming conflicts
 import type { Pokemon as ApiPokemon } from '@/types/pokemon'
 import type { Pokemon as BattlePokemon } from '@/types/battle'
 
@@ -9,6 +8,9 @@ import { TYPE_COLORS } from '@/types/pokemon.ts'
 import { usePokemon } from '@/composables/usePokemon'       
 import { usePokemonSearch } from '@/composables/usePokemonSearch'
 import PokeCardBattle from './PokeCardBattle.vue'
+import pickSound from '@/assets/ichooseyou.mp3'
+
+const pickingSound = new Audio(pickSound)
 
 const props = defineProps<{
   playerPick: BattlePokemon | null
@@ -23,12 +25,12 @@ const emit = defineEmits<{
 }>()
 
 // --- Interactive Animations State ---
-const isFlickering = ref(false)
+const isFlickering = ref(true)
 
 const { pokemons, loading, loadMore } = usePokemon()
 const { searchQuery, searchedPokemon, searchLoading, searchError, handleSearch, clearSearch, isSearching } = usePokemonSearch()
 
-// Normalizes your pre-mapped application API structure into the simplified Battle format
+// Normalizes chuchu
 function normalizePokemon(p: ApiPokemon): BattlePokemon {
   return {
     id: p.id,
@@ -50,10 +52,12 @@ const activeSelectionPool = computed<BattlePokemon[]>(() => {
 
 // Triggers a classic retro dark flash before updating selected states
 function handlePokemonSelect(type: 'player' | 'enemy', pokemon: BattlePokemon) {
-  isFlickering.value = true
+ 
+    pickingSound.currentTime = 0
+    pickingSound.play()
   
   setTimeout(() => {
-    isFlickering.value = false
+  
     if (type === 'player') {
       emit('selectPlayer', pokemon)
     } else {

@@ -88,7 +88,7 @@ watch(() => props.pokemon.id, (newId) => {
   <article class="card-wrap" :class="{'isCardSearch': isSearch, 'flipped': isFlipped}">
     <div class="card-inner-3d">
       <div class="card-face card-front">
-        <div class="card-body">
+        <div class="card-body cursor-pointer" @click="toggleFlip">
           <div class="shine"></div>
 
           <span class="card-num"> #{{ padId(pokemon.id) }} </span>
@@ -178,7 +178,7 @@ watch(() => props.pokemon.id, (newId) => {
 
       <!-- back -->
       <div class="card-face card-back">
-        <div class="card-back-body" >
+        <div class="card-back-body" @click="toggleFlip" >
 
           <img v-if="!isSearch" :src="getBackgroundAsset(props.pokemon.types[0]??'normal')" alt="" class="pokeBacground">
           
@@ -647,10 +647,12 @@ watch(() => props.pokemon.id, (newId) => {
 .pokeBacground{
   position: absolute;
   z-index: -1;
+  width: 100%;
   object-fit: fill; 
   height: 250px;
   filter: brightness(0.9);
 }
+
 
 /* skelton loading effect chuchu */
 .sprite-skeleton {

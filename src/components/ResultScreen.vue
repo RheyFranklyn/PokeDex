@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount } from 'vue' // 1. Import lifecycle hooks
+import { onMounted, onBeforeUnmount } from 'vue' 
 import type { Pokemon, BattleResult } from '@/types/battle'
 import winSound from '@/assets/win.mp3'
 import loseSound from '@/assets/lose.mp3'
+import { useRouter } from 'vue-router'
+
+
+const router = useRouter()
 
 const props = defineProps<{
   result: BattleResult
@@ -12,18 +16,16 @@ const props = defineProps<{
 
 const emit = defineEmits<{ playAgain: [] }>()
 
-
 const winnerAudio = new Audio(winSound)
 const loseAudio = new Audio(loseSound)
 
 onMounted(() => {
-  // Only play if the player actually won the battle
   if (props.result.playerWon) {
     winnerAudio.currentTime = 0
     winnerAudio.play().catch(error => {
       console.warn("Audio autoplay blocked by browser:", error)
     })
-  }else{
+  } else {
     loseAudio.currentTime = 0
     loseAudio.play().catch(error => {
       console.warn("Audio autoplay blocked by browser:", error)
@@ -31,7 +33,6 @@ onMounted(() => {
   }
 })
 
-// Clean up: Stop the music instantly if they click "Play Again" or leave the screen
 onBeforeUnmount(() => {
   winnerAudio.pause()
   winnerAudio.currentTime = 0
@@ -40,11 +41,21 @@ onBeforeUnmount(() => {
 function fallback(id: number): string {
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
 }
+
+function routeToHome(){
+  router.push({ name: 'home' })
+}
 </script>
 
 <template>
   <div class="result-screen">
-    <div class="result-box">
+]
+    <img src="@/assets/images/ghost.jpg" alt="" class="absolute inset-0 w-full h-full object-cover pointer-events-none z-0">
+    
+   
+    <div class="absolute inset-0 bg-black/65 z-1 pointer-events-none backdrop-blur-[1px]"></div>
+
+    <div class="result-box pop-card">
       <h2
         class="result-title"
         :style="{ color: props.result.playerWon ? '#ffe066' : '#ff6b6b' }"
@@ -88,16 +99,21 @@ function fallback(id: number): string {
 
       <p class="rounds-label">Battle lasted {{ props.result.rounds }} rounds</p>
 
-      <button class="rematch-btn" @click="emit('playAgain')">🏠 Play Again</button>
+      <div class="button-group">
+        <button class="rematch-btn" @click="emit('playAgain')">🔄 Play Again</button>
+        <button class="home-btn" @click="routeToHome">🏠 Home</button>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-/* Your existing CSS code remains exactly unchanged */
 .result-screen {
   width: 100vw;
   min-height: 100vh;
+  
+  position: relative;
+  overflow: hidden;
   background: #0a0a12;
   display: flex;
   align-items: center;
@@ -105,15 +121,23 @@ function fallback(id: number): string {
   padding: 24px;
   box-sizing: border-box;
 }
+
+
+.pop-card {
+  position: relative;
+  z-index: 10;
+  background: rgba(15, 15, 25, 0.85) !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
+}
+
 .result-box {
-  background: rgba(255,255,255,0.06);
   border-radius: 20px;
   padding: 32px 40px;
   text-align: center;
-  border: 1px solid rgba(255,255,255,0.12);
   max-width: 380px;
   width: 100%;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 .result-title {
   font-size: 32px;
@@ -166,6 +190,14 @@ function fallback(id: number): string {
   letter-spacing: 1px;
   margin-bottom: 24px;
 }
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
 .rematch-btn {
   background: linear-gradient(135deg, #ff6b00, #e53935);
   color: #fff;
@@ -181,7 +213,27 @@ function fallback(id: number): string {
   box-shadow: 0 4px 15px rgba(229, 57, 53, 0.4);
 }
 .rematch-btn:hover { 
-  transform: scale(1.05); 
+  transform: scale(1.03); 
   box-shadow: 0 6px 20px rgba(229, 57, 53, 0.6);
+}
+
+.home-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 14px 40px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+.home-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.03);
 }
 </style>

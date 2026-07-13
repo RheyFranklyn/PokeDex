@@ -22,7 +22,7 @@ async function handleSearch() {
     const target = await searchPokemon(searchQuery.value.toLowerCase().trim())
     searchedPokemon.value = target
 
-    // Fetch its species profile to get the evolution chain URL
+    // Fetch th e species profile to get the evolution chain URL
     const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${target.id}/`)
     const speciesData = await speciesRes.json()
     

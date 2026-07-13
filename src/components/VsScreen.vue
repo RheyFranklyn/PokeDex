@@ -21,6 +21,7 @@ onMounted(() => {
   <div class="vs-screen" role="presentation" aria-label="Versus transition">
     <div class="panel left" :class="{ in: leftIn }">
       <span class="label">You</span>
+      <img src="@/assets/images/leftbBg2.png" alt="" class="absolute w-full h-full">
       <img src="@/assets/images/myAvatar.png" alt="Enemy Avatar" class="enemy-avatar">
     </div>
 
@@ -28,6 +29,7 @@ onMounted(() => {
 
     <div class="panel right" :class="{ in: rightIn }">
       <span class="label">Enemy</span>
+      <img src="@/assets/images/rightBg2.png" alt="" class="absolute w-full h-full ">
       <img src="@/assets/images/hero.jpg" alt="Enemy Avatar" class="enemy-avatar">
     </div>
   </div>
@@ -75,7 +77,7 @@ onMounted(() => {
 
   max-width: 340px;
   
-  max-height: 70vh; 
+  max-height: 60vh; 
   
   object-fit: contain; 
   
@@ -84,6 +86,7 @@ onMounted(() => {
 }
 
 .left {
+  
   left: 0;
   background: linear-gradient(135deg, #e53935, #b71c1c);
   transform: translateX(-110%);
@@ -91,6 +94,9 @@ onMounted(() => {
 .left.in { transform: translateX(0); }
 
 .right {
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
   right: 0;
   background: linear-gradient(225deg, #1565c0, #0d47a1);
   transform: translateX(110%);

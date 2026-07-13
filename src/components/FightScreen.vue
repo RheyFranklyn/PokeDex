@@ -46,10 +46,23 @@ const enemyHP  = computed(() => Math.max(0, props.battleState.eHP))
 
 <template>
   <div class="fight-screen">
+    <img 
+      src="@/assets/images/fairy.jpg" 
+      alt="" 
+      class="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+    />
+    
+    <div class="absolute inset-0 bg-black/50 z-1 pointer-events-none backdrop-blur-[1px]"></div>
+
     <div class="arena-wrap">
-      
-      <div class="arena">
-        
+
+    
+      <div class="arena pop-arena">
+        <img 
+      src="@/assets/images/fightBg.jpg" 
+      alt="" 
+      class="absolute inset-0 w-full h-full object-cover ointer-events-none"
+    />
         <Transition name="hit-fade">
           <div
             v-if="props.hitMessage && props.hitMessage.target === 'enemy'"
@@ -100,8 +113,7 @@ const enemyHP  = computed(() => Math.max(0, props.battleState.eHP))
       </div>
 
       <div class="hp-bars">
-        
-        <div class="hp-block">
+        <div class="hp-block pop-panel">
           <div class="hp-header">
             <span class="hp-name">{{ props.playerPick.name }}</span>
             <span class="hp-num">{{ playerHP }}/{{ props.battleState.pMaxHP }}</span>
@@ -114,7 +126,7 @@ const enemyHP  = computed(() => Math.max(0, props.battleState.eHP))
           </div>
         </div>
         
-        <div class="hp-block">
+        <div class="hp-block pop-panel">
           <div class="hp-header">
             <span class="hp-num">{{ enemyHP }}/{{ props.battleState.eMaxHP }}</span>
             <span class="hp-name">{{ props.enemyPick.name }}</span>
@@ -128,7 +140,7 @@ const enemyHP  = computed(() => Math.max(0, props.battleState.eHP))
         </div>
       </div>
 
-      <div class="battle-log" role="log" aria-live="polite">
+      <div class="battle-log pop-panel" role="log" aria-live="polite">
         {{ props.battleLog }}
       </div>
       
@@ -140,12 +152,14 @@ const enemyHP  = computed(() => Math.max(0, props.battleState.eHP))
 .fight-screen {
   width: 100vw;
   min-height: 100vh;
-  background: #0a0a12;
+  position: relative;
+  overflow-x: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px 16px;
   box-sizing: border-box;
+  background-color: #0a0a12;
 }
 
 .arena-wrap {
@@ -154,17 +168,30 @@ const enemyHP  = computed(() => Math.max(0, props.battleState.eHP))
   display: flex;
   flex-direction: column;
   gap: 16px;
+  position: relative;
+ 
+  z-index: 10; 
 }
 
 .arena {
   width: 100%;
   height: 260px;
-  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 60%, #3d2a1a 60%, #2d1a0a 100%);
+  
+  background: linear-gradient(180deg, rgba(26, 26, 46, 0.4) 0%, rgba(22, 33, 62, 0.5) 60%, rgba(61, 42, 26, 0.7) 60%, rgba(45, 26, 10, 0.8) 100%);
   border-radius: 12px;
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+
+.pop-panel {
+  background: rgba(15, 15, 30, 0.85) !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6) !important;
 }
 
 .arena::after {
@@ -199,7 +226,7 @@ const enemyHP  = computed(() => Math.max(0, props.battleState.eHP))
 .player-fighter { left: 40px; }
 .enemy-fighter  { right: 40px; transform: scaleX(-1); }
 
-/* --- ⚔️ Combat State Keyframe Triggers --- */
+/* --- Combat State Keyframe Triggers --- */
 .shake       { animation: shake 0.4s ease-in-out; }
 .shake-enemy { animation: shakeEnemy 0.4s ease-in-out; }
 .faint       { animation: faint 0.7s cubic-bezier(.4, 0, 1, 1) forwards; }
@@ -225,7 +252,7 @@ const enemyHP  = computed(() => Math.max(0, props.battleState.eHP))
   to { transform: scaleX(-1) translateY(50px) rotate(-15deg); opacity: 0; }
 }
 
-/* --- 💥 Combat Floater Effects --- */
+/* --- Combat Floater Effectsss --- */
 .hit-effect {
   position: absolute;
   font-size: 24px;
@@ -249,7 +276,7 @@ const enemyHP  = computed(() => Math.max(0, props.battleState.eHP))
   100% { opacity: 0; transform: scale(0.9) translateY(-50px); }
 }
 
-/* --- 📊 Health Interface Module --- */
+/* --- Health Interface part --- */
 .hp-bars {
   display: flex;
   gap: 12px;
@@ -257,11 +284,8 @@ const enemyHP  = computed(() => Math.max(0, props.battleState.eHP))
 
 .hp-block {
   flex: 1;
-  background: rgba(20, 20, 35, 0.65);
   border-radius: 10px;
   padding: 12px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 .hp-header {
@@ -288,7 +312,7 @@ const enemyHP  = computed(() => Math.max(0, props.battleState.eHP))
 
 .hp-track {
   height: 12px;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
   border-radius: 6px;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.05);
@@ -300,13 +324,11 @@ const enemyHP  = computed(() => Math.max(0, props.battleState.eHP))
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease;
 }
 
-/* --- 📜 Feed Panel --- */
+/* --- Feed Panel --- */
 .battle-log {
-  background: rgba(10, 10, 18, 0.85);
   border-radius: 10px;
   padding: 14px 18px;
   min-height: 64px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
   color: rgba(255, 255, 255, 0.95);
   font-size: 14px;
   line-height: 1.6;

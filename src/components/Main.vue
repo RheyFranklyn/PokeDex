@@ -39,21 +39,21 @@ function goToBattleArena() {
     <PokemonCardsContainer />
     
     <BattleBtn @trigger="goToBattleArena" class="animate-pulse-slow"/>
-<img 
-  src="@/assets/images/fireBtn.png"  
-  alt="fight-button" 
-  class="w-32 h-16 fixed bottom-5 right-20 cursor-pointer sm:bottom-4 z-50 
-         drop-shadow-[0_0_8px_rgba(249,115,22,0.6)]
-         hover:drop-shadow-[0_0_15px_rgba(239,68,68,0.9)]
-         transition-all duration-300 ease-out
-         hover:-translate-y-1 hover:scale-105 active:scale-95 animate-pulse-slow" 
-  @click="goToBattleArena"
-/>
+    <img 
+      src="@/assets/images/fireBtn.png"  
+      alt="fight-button" 
+      class="w-32 h-16 fixed bottom-5 right-20 cursor-pointer sm:bottom-4 z-50 
+            drop-shadow-[0_0_8px_rgba(249,115,22,0.6)]
+            hover:drop-shadow-[0_0_15px_rgba(239,68,68,0.9)]
+            transition-all duration-300 ease-out
+            hover:-translate-y-1 hover:scale-105 active:scale-95 animate-pulse-slow" 
+      @click="goToBattleArena"
+    />
   </main>
 </template>
 
 <style scoped>
-/* 📌 Retro Encounter Screen Flash Transition Styles */
+/*  Retro Encounter Screen Flash Transition Styles */
 .flicker-overlay {
   position: fixed;
   top: 0;

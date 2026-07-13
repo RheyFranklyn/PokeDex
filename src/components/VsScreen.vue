@@ -25,7 +25,7 @@ onMounted(() => {
       <img src="@/assets/images/myAvatar.png" alt="Your Avatar" class="enemy-avatar">
     </div>
 
-    <div class="vs-badge" :class="{ in: badgeIn }" aria-hidden="true">VS</div>
+    <div class="vs-badge" :class="{ in: badgeIn }" aria-hidden="true">VSS</div>
 
     <div class="panel right" :class="{ in: rightIn }">
       <span class="label">Enemy</span>

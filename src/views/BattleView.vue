@@ -32,7 +32,7 @@ const {
 
 <template>
   <div class="w-full min-h-screen bg-[#0a0a12] flex flex-col items-center justify-center overflow-x-hidden">
-    
+    <!-- pick -->
     <PickScreen
       v-if="screen === 'home'"
       :player-pick="playerPick"
